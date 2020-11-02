@@ -2,10 +2,7 @@ import logging
 
 
 def add(numbers_list):
-    _sum = 0
-    for number in numbers_list:
-        _sum += number
-    return _sum
+    return sum(numbers_list)
 
 
 def sub(number_list):
@@ -23,10 +20,15 @@ def mul(number_list):
 
 
 def div(number_list):
-    _div = number_list[0]
-    for number in range(1, len(number_list)):
-        _div /= number_list[number]
-    return _div
+    try:
+        _div = number_list[0]
+        for number in range(1, len(number_list)):
+            _div /= number_list[number]
+        return _div
+    except ZeroDivisionError:
+        frame = '-'*70
+        logging.error(f'{frame}\nPamiętaj cholero: "NIE DZIEL NIGDY PRZEZ 0"!!!\n{frame}')
+        return False
 
 
 def is_number(value):
@@ -44,11 +46,10 @@ def is_int(value):
     except ValueError:
         return False
 
+
 def is_sign_in_menu_correct(sign):
     signs = ('1', '2', '3', '4', 'q')
-    for item in signs:
-        if sign.lower() == item:
-            return True
+    return sign.lower() in signs
 
 
 def num_lst(_range=2):
@@ -80,12 +81,13 @@ logging.basicConfig(level=logging.DEBUG, format='%(message)s')
 
 while True:
     while True:
-        type_of_calculation = input("\n1-Dodawanie, 2-Odejmowanie, 3-Mnożenie, 4-Dzielenie, Q/q-Wyjście\nJakie działanie chcesz wykonać?: ")
+        print("\n1-Dodawanie, 2-Odejmowanie, 3-Mnożenie, 4-Dzielenie, Q/q-Wyjście")
+        type_of_calculation = input("Jakie działanie chcesz wykonać?: ")
         if is_sign_in_menu_correct(type_of_calculation) is True:
             break
         else:
             print('-' * 70)
-            logging.warning("Coś poszło nie tak! Wybierz jeszcze raz.")
+            logging.error("Coś poszło nie tak! Wybierz jeszcze raz.")
             print('-' * 70)
     if type_of_calculation == '1':
         while True:
@@ -135,10 +137,13 @@ while True:
         print('-' * 70)
     if type_of_calculation == '4':
         numbers = num_lst()
-        print('-' * 70)
-        logging.info("Przeprowadzone działanie: " + num_str(numbers, '/'))
-        print(f'Wynik działania: {div(numbers)}')
-        print('-' * 70)
+        if div(numbers) is False:
+            pass
+        else:
+            print('-' * 70)
+            logging.info("Przeprowadzone działanie: " + num_str(numbers, '/'))
+            print(f'Wynik działania: {div(numbers)}')
+            print('-' * 70)
     if type_of_calculation.lower() == 'q':
         print("\nDzięki za uwagę.\n")
         break
