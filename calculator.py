@@ -37,6 +37,13 @@ def is_number(value):
         return False
 
 
+def is_int(value):
+    try:
+        int(value)
+        return True
+    except ValueError:
+        return False
+
 def is_sign_in_menu_correct(sign):
     signs = ('1', '2', '3', '4', 'q')
     for item in signs:
@@ -49,11 +56,14 @@ def num_lst(_range=2):
     for number in range(1, _range + 1):
         while True:
             a = input("Podaj liczbę %d: " % number)
+            a = a.replace(',', '.')
             if is_number(a) is True:
                 a = float(a)
                 break
             else:
-                logging.warning("\nWpisana wartość nie jest liczbą, spróbuj jeszcze raz.")
+                print('-' * 70)
+                logging.warning("Wpisana wartość nie jest liczbą, spróbuj jeszcze raz.")
+                print('-' * 70)
         number_list.append(a)
     return number_list
 
@@ -68,30 +78,67 @@ def num_str(number_list, sign):
 
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
 
-
 while True:
-    type_of_calculation = input("1-Dodawanie, 2-Odejmowanie, 3-Mnożenie, 4-Dzielenie, Q-Wyjście\nJakie działanie chcesz wykonać?: ")
-    if is_sign_in_menu_correct(type_of_calculation) is True:
+    while True:
+        type_of_calculation = input("\n1-Dodawanie, 2-Odejmowanie, 3-Mnożenie, 4-Dzielenie, Q/q-Wyjście\nJakie działanie chcesz wykonać?: ")
+        if is_sign_in_menu_correct(type_of_calculation) is True:
+            break
+        else:
+            print('-' * 70)
+            logging.warning("Coś poszło nie tak! Wybierz jeszcze raz.")
+            print('-' * 70)
+    if type_of_calculation == '1':
+        while True:
+            _range = input("\nIle liczb chcesz ze sobą dodać?: ")
+            if is_int(_range) is not True:
+                print('-' * 70)
+                logging.warning("Wpisana wartość nie jest liczbą całkowitą, spróbuj jeszcze raz.")
+                print('-' * 70)
+            else:
+                _range = int(_range)
+                if _range < 2:
+                    print('-' * 70)
+                    logging.warning("Liczb musi być więcej niż jedna!")
+                    print('-' * 70)
+                else:
+                    break
+        numbers = num_lst(_range)
+        print('-' * 70)
+        logging.info("Przeprowadzone działanie: " + num_str(numbers, '+'))
+        print(f'Wynik działania: {add(numbers)}')
+        print('-' * 70)
+    if type_of_calculation == '2':
+        numbers = num_lst()
+        print('-' * 70)
+        logging.info("Przeprowadzone działanie: " + num_str(numbers, '-'))
+        print(f'Wynik działania: {sub(numbers)}')
+        print('-' * 70)
+    if type_of_calculation == '3':
+        while True:
+            _range = input("\nIle liczb chcesz ze sobą pomnożyć?: ")
+            if is_int(_range) is not True:
+                print('-' * 70)
+                logging.warning("Wpisana wartość nie jest liczbą całkowitą, spróbuj jeszcze raz.")
+                print('-' * 70)
+            else:
+                _range = int(_range)
+                if _range < 2:
+                    print('-' * 70)
+                    logging.warning("Liczb musi być więcej niż jedna!")
+                    print('-' * 70)
+                else:
+                    break
+        numbers = num_lst(_range)
+        print('-' * 70)
+        logging.info("Przeprowadzone działanie: " + num_str(numbers, '*'))
+        print(f'Wynik działania: {mul(numbers)}')
+        print('-' * 70)
+    if type_of_calculation == '4':
+        numbers = num_lst()
+        print('-' * 70)
+        logging.info("Przeprowadzone działanie: " + num_str(numbers, '/'))
+        print(f'Wynik działania: {div(numbers)}')
+        print('-' * 70)
+    if type_of_calculation.lower() == 'q':
+        print("\nDzięki za uwagę.\n")
         break
-    else:
-        logging.warning("Coś poszło nie tak! Wybierz jeszcze raz.")
-
-
-if type_of_calculation == '1':
-    _range = int(input("Ile liczb chcesz ze sobą dodać?: "))
-    numbers = num_lst(_range)
-    logging.info("Przeprowadzone działanie: " + num_str(numbers, '+'))
-    print(f'Wynik działania: {add(numbers)}')
-if type_of_calculation == '2':
-    numbers = num_lst()
-    logging.info("Przeprowadzone działanie: " + num_str(numbers, '-'))
-    print(f'Wynik działania: {sub(numbers)}')
-if type_of_calculation == '3':
-    _range = int(input("Ile liczb chcesz ze sobą pomnożyć?: "))
-    numbers = num_lst(_range)
-    logging.info("Przeprowadzone działanie: " + num_str(numbers, '*'))
-    print(f'Wynik działania: {mul(numbers)}')
-if type_of_calculation == '4':
-    numbers = num_lst()
-    logging.info("Przeprowadzone działanie: " + num_str(numbers, '/'))
-    print(f'Wynik działania: {div(numbers)}')
